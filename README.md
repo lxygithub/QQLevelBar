@@ -15,10 +15,10 @@
             
 #### 一些自定义属性：
      <declare-styleable name="qq_level_view">
-            <attr name="level" format="integer"/>
-            <attr name="step" format="integer"/>
-            <attr name="drawable_1" format="reference"/>
-            <attr name="drawable_2" format="reference"/>
-            <attr name="drawable_3" format="reference"/>
-        </declare-styleable>
+             <attr name="level" format="integer"/><!--设置等级-->
+             <attr name="step" format="integer"/><!--设置步进-->
+             <attr name="drawable_1" format="reference"/><!--一级图片-->
+             <attr name="drawable_2" format="reference"/><!--二级图片-->
+             <attr name="drawable_3" format="reference"/><!--三级图片-->
+     </declare-styleable>
 
