@@ -32,9 +32,12 @@ public class QQLevelBar extends View
     private Bitmap sunBitmap;
     private Bitmap moonBitmap;
     private Bitmap starBitmap;
-    private Bitmap defaultBitmap;
     private Paint bitmapPaint;
     private int level;
+    private int step = 5;
+    private int drawableResId1;
+    private int drawableResId2;
+    private int drawableResId3;
     private List<String> list;
 
     public int getLevel()
@@ -45,6 +48,46 @@ public class QQLevelBar extends View
     public void setLevel(int level)
     {
         this.level = level;
+    }
+
+    public int getStep()
+    {
+        return step;
+    }
+
+    public void setStep(int step)
+    {
+        this.step = step;
+    }
+
+    public int getDrawableResId1()
+    {
+        return drawableResId1;
+    }
+
+    public void setDrawableResId1(int drawableResId1)
+    {
+        this.drawableResId1 = drawableResId1;
+    }
+
+    public int getDrawableResId2()
+    {
+        return drawableResId2;
+    }
+
+    public void setDrawableResId2(int drawableResId2)
+    {
+        this.drawableResId2 = drawableResId2;
+    }
+
+    public int getDrawableResId3()
+    {
+        return drawableResId3;
+    }
+
+    public void setDrawableResId3(int drawableResId3)
+    {
+        this.drawableResId3 = drawableResId3;
     }
 
     public QQLevelBar(Context context)
@@ -64,6 +107,10 @@ public class QQLevelBar extends View
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.qq_level_view);
 
         level = typedArray.getInt(R.styleable.qq_level_view_level, 0);
+        step = typedArray.getInt(R.styleable.qq_level_view_step, 5);
+        drawableResId1 = typedArray.getResourceId(R.styleable.qq_level_view_drawable_1, R.drawable.icon_sun_checked);
+        drawableResId2 = typedArray.getResourceId(R.styleable.qq_level_view_drawable_2, R.drawable.icon_moon_checked);
+        drawableResId3 = typedArray.getResourceId(R.styleable.qq_level_view_drawable_3, R.drawable.icon_star_checked);
         typedArray.recycle();
 
 
@@ -73,10 +120,9 @@ public class QQLevelBar extends View
 
     private void init()
     {
-        sunBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_sun_checked);
-        moonBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_moon_checked);
-        starBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_star_checked);
-        defaultBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_star_uncheck);
+        sunBitmap = BitmapFactory.decodeResource(getResources(), drawableResId1);
+        moonBitmap = BitmapFactory.decodeResource(getResources(), drawableResId2);
+        starBitmap = BitmapFactory.decodeResource(getResources(), drawableResId3);
         bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         list = calculateLevel(level);
 
@@ -93,7 +139,7 @@ public class QQLevelBar extends View
         {
             case MeasureSpec.AT_MOST:
             case MeasureSpec.UNSPECIFIED:
-                viewWidth = defaultBitmap.getWidth() * 7 + defaultBitmap.getWidth() / 3;
+                viewWidth = (sunBitmap.getWidth() + sunBitmap.getWidth() / 3) * list.size() + sunBitmap.getWidth() / 2;
                 break;
             case MeasureSpec.EXACTLY:
                 viewWidth = MeasureSpec.getSize(widthMeasureSpec);
@@ -103,7 +149,7 @@ public class QQLevelBar extends View
         {
             case MeasureSpec.AT_MOST:
             case MeasureSpec.UNSPECIFIED:
-                viewHeight = defaultBitmap.getHeight() * 2;
+                viewHeight = sunBitmap.getHeight() * 2;
                 break;
             case MeasureSpec.EXACTLY:
                 viewHeight = MeasureSpec.getSize(widthMeasureSpec);
@@ -112,15 +158,14 @@ public class QQLevelBar extends View
 
         setMeasuredDimension(viewWidth, viewHeight);
 
-        margin = defaultBitmap.getHeight() / 2;
+        margin = sunBitmap.getHeight() / 2;
     }
-
 
 
     @Override
     protected void onDraw(Canvas canvas)
     {
-        int bitmapMargin = defaultBitmap.getWidth() / 3;
+        int bitmapMargin = sunBitmap.getWidth() / 3;
 
         for (int i = 0; i < list.size(); i++)
         {
@@ -133,13 +178,9 @@ public class QQLevelBar extends View
             {
                 canvas.drawBitmap(moonBitmap, (moonBitmap.getWidth() + bitmapMargin) * i + moonBitmap.getWidth() / 2,
                         margin, bitmapPaint);
-            } else if (list.get(i).equals("星"))
-            {
-                canvas.drawBitmap(starBitmap, (starBitmap.getWidth() + bitmapMargin) * i + starBitmap.getWidth() / 2,
-                        margin, bitmapPaint);
             } else
             {
-                canvas.drawBitmap(defaultBitmap, (defaultBitmap.getWidth() + bitmapMargin) * i + defaultBitmap.getWidth() / 2,
+                canvas.drawBitmap(starBitmap, (starBitmap.getWidth() + bitmapMargin) * i + starBitmap.getWidth() / 2,
                         margin, bitmapPaint);
             }
 
@@ -150,13 +191,10 @@ public class QQLevelBar extends View
     {
 
         List<String> list = new ArrayList<>();
-        if (level > 125)
-        {
-            level = 125;
-        }
-        int sunNum = level / 25;
-        int moonNum = (level - 25 * sunNum) / 5;
-        int starNum = level - sunNum * 25 - moonNum * 5;
+
+        int sunNum = level / (step * step);
+        int moonNum = (level - (step * step) * sunNum) / step;
+        int starNum = level - sunNum * (step * step) - moonNum * step;
 
 
         for (int i = 0; i < sunNum; i++)
@@ -175,17 +213,6 @@ public class QQLevelBar extends View
             list.add("星");
         }
 
-        if (list.size() < 5)
-        {
-            while (list.size() < 5)
-            {
-                list.add("空");
-            }
-        }
-        if (list.size() > 5)
-        {
-            list = list.subList(0, 5);
-        }
 
         return list;
     }

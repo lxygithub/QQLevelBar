@@ -2,5 +2,9 @@
 <resources>
     <declare-styleable name="qq_level_view">
         <attr name="level" format="integer"/>
+        <attr name="step" format="integer"/>
+        <attr name="drawable_1" format="reference"/>
+        <attr name="drawable_2" format="reference"/>
+        <attr name="drawable_3" format="reference"/>
     </declare-styleable>
 </resources>
