@@ -4,3 +4,13 @@
 
 
 ![效果](images/TIM截图20170821104724.png)
+
+#### 使用：
+
+      <com.mewlxy.qqlevelbar.QQLevelBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:level="111"
+            app:step="4"/>
+

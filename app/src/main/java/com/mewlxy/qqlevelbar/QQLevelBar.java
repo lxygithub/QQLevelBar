@@ -173,18 +173,19 @@ public class QQLevelBar extends View
             if (list.get(i).equals("日"))
             {
                 canvas.drawBitmap(sunBitmap, (sunBitmap.getWidth() + bitmapMargin) * i + sunBitmap.getWidth() / 2,
-                        margin, bitmapPaint);
+                        viewHeight / 2 - margin, bitmapPaint);
             } else if (list.get(i).equals("月"))
             {
                 canvas.drawBitmap(moonBitmap, (moonBitmap.getWidth() + bitmapMargin) * i + moonBitmap.getWidth() / 2,
-                        margin, bitmapPaint);
+                        viewHeight / 2 - margin, bitmapPaint);
             } else
             {
                 canvas.drawBitmap(starBitmap, (starBitmap.getWidth() + bitmapMargin) * i + starBitmap.getWidth() / 2,
-                        margin, bitmapPaint);
+                        viewHeight / 2 - margin, bitmapPaint);
             }
 
         }
+
     }
 
     private List<String> calculateLevel(int level)
